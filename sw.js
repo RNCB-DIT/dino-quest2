@@ -1,6 +1,6 @@
 
 'use strict';
-const VERSION='fe491612d2a8';
+const VERSION='v2';
 const BASE=self.registration.scope;
 const PREFIX='dino-expedition:'+BASE+':';
 const CACHE=PREFIX+VERSION;
