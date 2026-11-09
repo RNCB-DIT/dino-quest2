@@ -1,13 +1,23 @@
 
 'use strict';
-const VERSION='v2';
+const VERSION='v3';
 const BASE=self.registration.scope;
 const PREFIX='dino-expedition:'+BASE+':';
 const CACHE=PREFIX+VERSION;
 const APP_URL=new URL('./index.html',BASE).href;
 const ROOT_URL=new URL('./',BASE).href;
 const FILES=['./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./icons/apple-touch-icon.png'].map(p=>new URL(p,BASE).href);
-self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(CACHE);await cache.addAll(FILES.map(url=>new Request(url,{cache:'reload'})));})());});
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+
+    await cache.addAll(
+      FILES.map(url => new Request(url, { cache: 'reload' }))
+    );
+
+    await self.skipWaiting();
+  })());
+});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith(PREFIX)&&key!==CACHE)await caches.delete(key);await self.clients.claim();})());});
 self.addEventListener('message',event=>{if(event.data&&event.data.type==='SKIP_WAITING')self.skipWaiting();});
 self.addEventListener('fetch',event=>{
